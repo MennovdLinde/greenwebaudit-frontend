@@ -10,12 +10,25 @@ interface ResultsDashboardProps {
   isLoading: boolean;
 }
 
+function carbonRating(score: number): string {
+  if (score <= 0.5) return 'good';
+  if (score <= 2)   return 'ok';
+  return 'poor';
+}
+
+function perfRating(score: number): string {
+  if (score >= 75) return 'good';
+  if (score >= 50) return 'ok';
+  return 'poor';
+}
+
 export function ResultsDashboard({ result, isLoading }: ResultsDashboardProps) {
   if (isLoading) {
     return (
       <div className="dashboard">
         <div className="loading">
-          <p>🔍 Analyzing website...</p>
+          <div className="loading-spinner" />
+          <p>Analyzing website...</p>
         </div>
       </div>
     );
@@ -24,31 +37,40 @@ export function ResultsDashboard({ result, isLoading }: ResultsDashboardProps) {
   if (!result) {
     return (
       <div className="dashboard empty">
-        <p>No audit results yet. Enter a URL above to get started.</p>
+        <div className="empty-icon">🌱</div>
+        <p>Enter a URL above to audit its carbon footprint</p>
       </div>
     );
   }
 
+  const shortUrl = result.url.replace(/^https?:\/\/(www\.)?/, '');
+
   return (
     <div className="dashboard">
       <div className="result-header">
-        <h2>Audit Results for {result.url}</h2>
+        <h2>Results for <span className="result-url">{shortUrl}</span></h2>
       </div>
 
       <div className="metrics">
         {result.carbonScore !== undefined && (
-          <div className="metric-card">
-            <div className="metric-label">Carbon Score</div>
-            <div className="metric-value">{result.carbonScore}g CO₂</div>
-            <div className="metric-desc">Estimated emissions per page load</div>
+          <div className="metric-card carbon">
+            <div className="metric-icon">🍃</div>
+            <div className="metric-label">Carbon / Load</div>
+            <div className={`metric-value ${carbonRating(result.carbonScore)}`}>
+              {result.carbonScore}g
+            </div>
+            <div className="metric-desc">CO₂ per page visit</div>
           </div>
         )}
 
         {result.performanceScore !== undefined && (
-          <div className="metric-card">
-            <div className="metric-label">Performance Score</div>
-            <div className="metric-value">{result.performanceScore}/100</div>
-            <div className="metric-desc">Overall page speed and efficiency</div>
+          <div className="metric-card perf">
+            <div className="metric-icon">⚡</div>
+            <div className="metric-label">Performance</div>
+            <div className={`metric-value ${perfRating(result.performanceScore)}`}>
+              {result.performanceScore}<span style={{ fontSize: '1rem', fontWeight: 400 }}>/100</span>
+            </div>
+            <div className="metric-desc">Page efficiency score</div>
           </div>
         )}
       </div>
@@ -58,7 +80,10 @@ export function ResultsDashboard({ result, isLoading }: ResultsDashboardProps) {
           <h3>Recommendations</h3>
           <ul>
             {result.recommendations.map((rec, i) => (
-              <li key={i}>{rec}</li>
+              <li key={i}>
+                <span className="rec-icon">✓</span>
+                <span>{rec}</span>
+              </li>
             ))}
           </ul>
         </div>
