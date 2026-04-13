@@ -31,7 +31,7 @@ function App() {
 
       setResult({
         url: data.url,
-        carbonScore: Math.floor(Math.random() * 10) + 2, // TODO: Real carbon in Week 3
+        carbonScore: data.carbonScore,
         performanceScore: data.performanceScore,
         recommendations: data.recommendations,
       });
@@ -55,7 +55,7 @@ function App() {
       </main>
 
       <footer className="footer">
-        <p>Building sustainable web tools. Week 1 MVP.</p>
+        <p>Building sustainable web tools.</p>
       </footer>
     </div>
   );
