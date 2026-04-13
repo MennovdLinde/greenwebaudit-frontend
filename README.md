@@ -1,74 +1,79 @@
-# React + TypeScript + Vite
+# Green Web Audit — Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React dashboard for auditing websites for **performance and carbon impact**.
 
-Currently, two official plugins are available:
+**Live:** [greenwebaudit-frontend.vercel.app](https://greenwebaudit-frontend.vercel.app)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## What it does
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Enter any URL and get an instant audit showing:
 
-## Expanding the ESLint configuration
+- Page size
+- Image, script, and stylesheet counts
+- Carbon score (grams CO2 per pageview)
+- Performance score (0–100)
+- Actionable recommendations
+- Audit history (stored in Supabase)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Tech Stack
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- **React 19** + **TypeScript**
+- **Vite** — build tool
+- Connects to [greenwebaudit-backend](https://greenwebaudit-backend-11644999869f.herokuapp.com) for audit logic
+- Deployed on **Vercel** with auto-deploy from GitHub
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+---
+
+## Project Structure
+
+```
+src/
+├── components/
+│   ├── URLInput.tsx         # URL input form
+│   ├── ResultsDashboard.tsx # Audit results display
+│   └── AuditHistory.tsx     # Historical audit panel
+├── App.tsx
+└── main.tsx
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Local Development
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev
 ```
-test auto deploy Mon Apr 13 14:14:15     2026
+
+The frontend expects the backend running at `http://localhost:5000` by default. Set `VITE_API_URL` to point elsewhere.
+
+```bash
+npm run build    # Production build
+npm run preview  # Preview production build locally
+```
+
+---
+
+## Deployment
+
+Deployed on Vercel. Pushes to `main` trigger an automatic redeploy.
+
+---
+
+## Related Projects
+
+| Project | Description | Link |
+|---------|-------------|------|
+| greenwebaudit-backend | Node.js/Express audit API | [Heroku](https://greenwebaudit-backend-11644999869f.herokuapp.com) |
+| carbon_service | Rust microservice for CO2 calculation | [Heroku](https://greenwebaudit-carbon-8d141f0eb525.herokuapp.com) |
+| green-audit-cli | CLI tool for terminal-based audits | [GitHub](https://github.com/MennovdLinde/green-audit-cli) |
+
+---
+
+## License
+
+MIT
